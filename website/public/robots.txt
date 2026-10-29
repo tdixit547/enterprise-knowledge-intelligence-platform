@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tdixit547.github.io/enterprise-knowledge-intelligence-platform/sitemap.xml

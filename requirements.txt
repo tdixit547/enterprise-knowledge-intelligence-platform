@@ -1,0 +1,26 @@
+# Core API
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.6
+
+# Retrieval & data
+chromadb>=0.4.24
+sentence-transformers>=2.6   # optional at runtime: hashing fallback if unavailable
+rank-bm25>=0.2.2
+numpy>=1.26                  # required by pandas
+pandas>=2.1
+prometheus-client>=0.20
+langfuse>=2.0
+opentelemetry-sdk>=1.20
+opentelemetry-exporter-otlp>=1.20
+opentelemetry-instrumentation-fastapi>=0.40b0
+langgraph>=0.0.10
+
+# Ingestion
+pypdf>=4.0
+reportlab>=4.0              # used to generate the synthetic PDF corpus
+
+# Testing
+pytest>=8.0
+httpx>=0.27                 # FastAPI TestClient transport
+cachetools==5.3.3

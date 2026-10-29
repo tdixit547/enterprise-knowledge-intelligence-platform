@@ -1,0 +1,13 @@
+## 2025-02-18 - [SQL Injection in SQLite Ingestion]
+**Vulnerability:** `load_sql` in `src/ingestion/sql_loader.py` interpolates table and column names directly into SQL strings without proper escaping. This allowed malicious SQLite databases with crafted table or column names to execute arbitrary SQL or break parsing.
+**Learning:** Even though `sqlite3` driver was connected in read-only mode (`?mode=ro`), executing a `UNION ALL` statement through string interpolation allowed an attacker to inject queries that can extract secrets from other tables or execute statements leading to denial of service. Dynamic SQL query construction must always escape literals and identifiers.
+**Prevention:** I escaped single quotes (`'`) as double single quotes (`''`) for string literals and double quotes (`"`) as double double quotes (`""`) for table and column identifiers when building the `SELECT` queries string.
+
+## 2025-02-18 - [Timing Attack in API Key Comparison]
+**Vulnerability:** `get_api_key` in `src/api/auth.py` used the `==` operator to compare the provided `api_key_header` against `config.API_KEY`. This string comparison operator returns early on the first non-matching character, which could allow an attacker to guess the API key character-by-character by measuring the time it takes for the server to reject the request (Timing Attack).
+**Learning:** Standard string comparison (`==`) should never be used for sensitive secrets, passwords, tokens, or API keys, even in non-cryptographic contexts like header validation.
+**Prevention:** I replaced the `==` comparison with `secrets.compare_digest(api_key_header, config.API_KEY)` which runs in constant time. I also added explicit `None` checks for both the header and the config key since `compare_digest` can throw a `TypeError` if given `None`.
+## 2024-07-04 - [Missing Security Headers in API]
+**Vulnerability:** The FastAPI application in `src/api/main.py` did not enforce standard HTTP security headers such as `X-Content-Type-Options`, `X-Frame-Options`, and `Strict-Transport-Security`. This could expose the application to MIME-sniffing, clickjacking, and man-in-the-middle attacks respectively.
+**Learning:** Even internal or strictly authenticated APIs must include modern HTTP security headers to maintain defense in depth and protect against broader web vulnerabilities.
+**Prevention:** I implemented an asynchronous `@app.middleware("http")` function that explicitly injects `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and `Strict-Transport-Security: max-age=31536000; includeSubDomains` into every response payload.

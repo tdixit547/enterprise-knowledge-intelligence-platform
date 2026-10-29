@@ -1,0 +1,25 @@
+﻿# Code Owners
+
+# These owners will be the default reviewers for pull requests.
+
+# Default catch-all
+*       @tdixit547
+
+# Core Backend & Architecture
+/src/api/           @tdixit547
+/src/pipeline.py    @tdixit547
+
+# Security & RBAC
+/src/security/      @tdixit547
+/data/rbac/         @tdixit547
+
+# Retrieval & Vector Store
+/src/retrieval/     @tdixit547
+/src/vectorstore/   @tdixit547
+
+# Frontend
+/website/           @tdixit547
+
+# Documentation
+/docs/              @tdixit547
+/README.md          @tdixit547
